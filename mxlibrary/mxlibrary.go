@@ -1,7 +1,7 @@
 package mxlibrary
 
 import (
-	"strconv"
+	"fmt"
 
 	"github.com/capybara-alt/diolibgen/svg"
 	"github.com/capybara-alt/libdrawio/libdrawio"
@@ -32,7 +32,7 @@ func (l *Mxlibrary) GenerateMxlibrary(svgs []svg.Svg) (*libdrawio.MxLibrary, err
 			return nil, err
 		}
 
-		mxlibobj, err := mxlibrary.MakeMxLibObj(mxGraphModel, title, h, w)
+		mxlibobj, err := mxlibrary.MakeMxLibObj(mxGraphModel, title, int(h), int(w))
 		if err != nil {
 			return nil, err
 		}
@@ -46,11 +46,11 @@ func (l *Mxlibrary) GenerateMxlibrary(svgs []svg.Svg) (*libdrawio.MxLibrary, err
 	return mxlibrary, nil
 }
 
-func (l *Mxlibrary) CreateMxGraphModel(compressedStr string, width, height int) (*libdrawio.MxGraphModel, error) {
+func (l *Mxlibrary) CreateMxGraphModel(compressedStr string, width, height float64) (*libdrawio.MxGraphModel, error) {
 	mxGraphModelTemplate := MxGraphModelTemplate()
 	mxGraphModelTemplate.Content.MxCells[2].Style += compressedStr
-	mxGraphModelTemplate.Content.MxCells[2].Geo.Width = strconv.Itoa(width)
-	mxGraphModelTemplate.Content.MxCells[2].Geo.Height = strconv.Itoa(height)
+	mxGraphModelTemplate.Content.MxCells[2].Geo.Width = fmt.Sprintf("%f", width)
+	mxGraphModelTemplate.Content.MxCells[2].Geo.Height = fmt.Sprintf("%f", height)
 
 	return mxGraphModelTemplate, nil
 }

@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"golang.org/x/net/html"
@@ -64,18 +65,18 @@ func (s *Svg) Compress() (string, error) {
 }
 
 // Get svg width and height from attributes
-func (s *Svg) GetSize() (width, height int) {
-	if width, exists := s.Selection.Attr("width"); exists {
-		w, _ := strconv.Atoi(width)
-		height, _ := s.Selection.Attr("height")
-		h, _ := strconv.Atoi(height)
+func (s *Svg) GetSize() (width, height float64) {
+	if viewBox, exists := s.Selection.Attr("viewBox"); exists {
+		viewBoxes := regexp.MustCompile(`(\s|,)`).Split(viewBox, 4)
+		w, _ := strconv.ParseFloat(viewBoxes[2], 64)
+		h, _ := strconv.ParseFloat(viewBoxes[3], 64)
 		return w, h
 	}
 
-	if viewBox, exists := s.Selection.Attr("viewBox"); exists {
-		viewBoxes := regexp.MustCompile(`(\s|,)`).Split(viewBox, 4)
-		w, _ := strconv.Atoi(viewBoxes[2])
-		h, _ := strconv.Atoi(viewBoxes[3])
+	if width, exists := s.Selection.Attr("width"); exists {
+		w, _ := strconv.ParseFloat(strings.ReplaceAll(width, "px", ""), 64)
+		height, _ := s.Selection.Attr("height")
+		h, _ := strconv.ParseFloat(strings.ReplaceAll(height, "px", ""), 64)
 		return w, h
 	}
 

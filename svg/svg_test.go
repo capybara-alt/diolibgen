@@ -65,8 +65,32 @@ func TestGetSizeFromViewbox(t *testing.T) {
 	}
 }
 
+func TestGetSizeFromViewboxFloat(t *testing.T) {
+	tests, err := goquery.NewDocumentFromReader(strings.NewReader(`<svg viewBox="0 0 100.00 100.00"><g /><style>path {fill: black; stroke: none;}</style></svg>`))
+	if err != nil {
+		t.Fail()
+	}
+
+	s := svg.NewSvg(*tests)
+	if w, h := s.GetSize(); w != 100.00 || h != 100.00 {
+		t.Fail()
+	}
+}
+
 func TestGetSizeFromWidthAndHeight(t *testing.T) {
 	tests, err := goquery.NewDocumentFromReader(strings.NewReader(`<svg width="25" height="25"><g /><style>path {fill: black; stroke: none;}</style></svg>`))
+	if err != nil {
+		t.Fail()
+	}
+
+	s := svg.NewSvg(*tests)
+	if w, h := s.GetSize(); w != 25 || h != 25 {
+		t.Fail()
+	}
+}
+
+func TestGetSizeFromWidthAndHeightWithPx(t *testing.T) {
+	tests, err := goquery.NewDocumentFromReader(strings.NewReader(`<svg width="25px" height="25px"><g /><style>path {fill: black; stroke: none;}</style></svg>`))
 	if err != nil {
 		t.Fail()
 	}
