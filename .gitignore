@@ -1,0 +1,7 @@
+go.sum
+input/**
+!input/.gitkeep
+output/**
+!output/.gitkeep
+.vscode
+main
